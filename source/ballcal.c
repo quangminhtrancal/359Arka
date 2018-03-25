@@ -90,7 +90,7 @@ void checkvaluepack();
 		  for (int j=0; j<30;j++)
 		  {
 			  gamearray[i][j]=0;
-			  if (i==18) gamearray[18][j]=11;
+			  //if (i==18) gamearray[18][j]=11;
 			  if ((i==0) || (i==19)) gamearray[i][j]=9;
 
 		  }
