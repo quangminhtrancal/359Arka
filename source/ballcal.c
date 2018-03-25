@@ -47,6 +47,7 @@ int trigbig=7;
 
 int triggerslowball;
 int triggerbigpaddle;
+int scores=0;
 
 int sbx; // check x position of slow ball symbol
 int sby;	// check y position of slow ball symbol
@@ -89,7 +90,7 @@ void checkvaluepack();
 		  for (int j=0; j<30;j++)
 		  {
 			  gamearray[i][j]=0;
-			  //if (i==18) gamearray[18][j]=11;
+			  if (i==18) gamearray[18][j]=11;
 			  if ((i==0) || (i==19)) gamearray[i][j]=9;
 
 		  }
@@ -125,6 +126,23 @@ int reversey(int indexy){
 	else if (brickvalue==8) return 3;
 	return 0;
  }
+ void updatescores(){
+	int count6=0; // count white bricks
+	int count7=0; // count green bricks
+	int count8=0; // count red bricks
+	
+	for (int j=0;j<30;j=j+3){
+		if (gamearray[3][j]==6){ count6+=1;
+		}
+		if (gamearray[2][j]==7){ count7+=1;
+		}
+		if (gamearray[1][j]==8){ count8+=1;
+		}
+		int total=count6+2*count7+3*count8;
+		scores=60-total;
+		
+	}
+}
  void treatbrick(int nextx, int nexty, int category){
  	if (category==1) {
 		clearbrick(reversex(nextx),reversey(nexty),width_brick,height_brick);
@@ -145,6 +163,7 @@ int reversey(int indexy){
 		clearbrick(reversex(nextx),reversey(nexty),width_brick,height_brick);
 		drawgreenbrick(reversex(nextx),reversey(nexty),width_brick,height_brick);	//draw green bricks
 	}
+	
  }
  int convert_xcorner(int x){
 	 double a=(x-originx)/32;
@@ -155,130 +174,136 @@ int convert_ycorner(int y){
 	 double a=(y-originy)/32;
 	return ((int) a);
 }
- 
- // Draw the ball movement
- void moveball(int startx, int starty){
-		checkvaluepack();
-		clearball(prevballx,prevbally,width_ball,height_ball);
-		drawball(ballx,bally,width_ball,height_ball);
 
-		printf("Speed value=%d\n",ang_valu);
-		int next_xtl;
-		int next_ytl;
-		
-		int next_xbl;
-		int next_ybl;
-		
-		int next_xtr;
-		int next_ytr;
-
-		int next_xbr;
-		int next_ybr;
-		
-		int ox=convert_x(ballx);
-		int oy=convert_y(bally);
-		
-		int next_xl;
-		int next_yl;
-		
-		int next_xr;
-		int next_yr;
-		
-		int next_xt;
-		int next_yt;
-		
-		int next_xb;
-		int next_yb;
-
-
-		next_xtl=ballx+dx;
-		next_ytl=bally+dy;
-
-		
-		next_xbl=ballx+dx;
-		next_ybl=bally+width_ball+dy;
-		
-		next_xtr=ballx+width_ball+dx;
-		next_ytr=bally+dy;
-		
-
-		next_xbr=ballx+width_ball+dx;
-		next_ybr=bally+height_ball+dy;
-		
-		int a=next_xtl; // real x coordinate
-		int b=next_ytl;  // real y coordinate
-		
-		
-
-		next_xtl=convert_x(next_xtl);
-		next_ytl=convert_y(next_ytl);
-//		printf("real tlx=%d realt tly=%d next tlx=%d next tly=%d \n",a,b,next_xtl,next_ytl);
-
-		next_xtr=convert_x(next_xtr);
-		next_ytr=convert_y(next_ytr);
-
-		next_xbl=convert_x(next_xbl);
-		next_ybl=convert_y(next_ybl);
-
-		next_xbr=convert_x(next_xbr);
-		next_ybr=convert_y(next_ybr);
-		
-		
-
-//	printf("real tlx=%d realt tly=%d next blx=%d next bly=%d \n",a,b,next_xbl,next_ybl);
-
-	//	printf("ballx=%d bally=%d dx=%d dy=%d tl=%d tr=%d bl=%d br=%d\n",ballx,bally,dx,dy,gamearray[next_ytl][next_xtl],gamearray[next_ytr][next_xtr],gamearray[next_ybl][next_xbl],gamearray[next_ybr][next_xbr]);
+int Touching(int al, int ar, int at, int ab, int bl, int br, int bt, int bb)
+{
+	int check=0;
+	if (scores>=4) {
 		//printmemory();
-		
-		if (b >originy+height_bggame-30){
-
-				gamestate=1;
-				printf("STOP\n");
-				drawgameover(originx+width_bg/2-width_gameover/2,originy+height_bg/2-height_gameover/2,width_gameover,height_gameover);
-		}
-		
-		
-		
-		// CASE for change x direction -----------------------------------------------------------------------------------------
-		if ((next_xtl<=0) && (a <originx)) {
-//			printf("real tlx=%d realt tly=%d next tlx=%d next tly=%d \n",a,b,next_xtl,next_ytl);
-			
-			dx=-dx;
-		}
-		else if ((next_xtr>29) || (next_xbr >29)) {
-			dx=-dx;
-		}
+		//printf("scores=%d brl=%d brr=%d brt=%d brb=%d bl=%d br=%d bt=%d bb=%d ballx=%d bally=%d\n",scores,al,ar,at,ab,bl,br,bt,bb,ballx, bally);
+	}
 	
-		
-		// CASE for change y direction ------------------------------------------------------------------------------------------
-				// Touch the top of the game
-		if((gamearray[next_ytl][next_xtl]==9) && (next_ytl==0)){
-			dy=-dy;
-		}
-		else if((gamearray[next_ytr][next_xtr]==9) && (next_ytr==0)){
-			dy=-dy;
-		}
-		
-		// Case for change y speed for 45 degree and 60 degree -------------------------------------------------------------------
-		
-		
-		// at the edge of the paddle
-		if ((gamearray[next_ybl][next_xbl]==10))
-			{
-				//printf("In edge\n");
-				dy=-ang_valu;
-				
-			}
-			// at middle of the paddle
-		if (gamearray[next_ybl][next_xbl]==11){
-				//printf("In middle\n");
-				if (startthisgame==0) {
-					dy=-ang_valu;
-					startthisgame=1;
-				}
-				else if (startthisgame==1) dy=-2*ang_valu;
+	if ((ar >= bl)&&(al <= br)&&(ab>=bt)&&(at<=bb)){
+		printf("\n");
+		printf("al=%d ar=%d at=%d ab=%d bl=%d br=%d bt=%d bb=%d\n",al,ar,at,ab,bl,br,bt,bb);
+		printf("\n");
+		check=1;
+	}
+	return check;
+}
+ 
+ void checkcollision_ballbrick(int bry, int brx, int brvalue)
+ {
+	 
+	 int brl=0;
+	 int brr=0;
+	 int brt=0;
+	 int brb=0;
+	 int bl=0;
+	 int br=0;
+	 int bt=0;
+	 int bb=0;
+	 int brickx=originx+brx*32;
+	 int bricky=originy+bry*32;
+	brl=brickx;
+	brr=brickx+96;
+	brt=bricky;
+	brb=bricky+32;
 
+	 bl=ballx;
+	 br=ballx+32;
+	 bt=bally;
+	 bb=bally+32;
+	 int checkbricktouch=Touching(brl,brr,brt,brb,bl,br,bt,bb);
+	 if (checkbricktouch==1){
+		 
+		 printf("in treat brick brx=%d bry=%d value=%d\n",brx,bry,brvalue);
+		 updatescores();
+		 printf("Score %d\n",scores);
+		 treatbrick(brx,bry,brvalue);
+
+		 int leftarea=br-brl;
+		 int rightarea=brr-bl;
+		 int toparea=bb-brt;
+		 int botarea=brb-bt;
+		 int ballfromleft=0;
+		 int minX=rightarea;
+		 int minY=botarea;
+		 if (leftarea<rightarea) {
+			 ballfromleft=1;
+			 minX=leftarea;
 		}
+		 int ballfromtop=0;
+		 if (toparea<botarea){
+			 ballfromtop=1;
+			 minY=toparea;
+		}
+		if (minX<minY){
+			if (ballfromleft==1) 
+			{
+				if (dx>0) dx=-dx;
+			}
+			else if (ballfromleft==0)
+			{
+				if (dx<0) dx=-dx;
+			}
+		}
+		else if (minX>=minY){
+			if (ballfromtop==1) 
+			{
+				if (dy>0) dy=-dy;
+			}
+			else if (ballfromtop==0)
+			{
+				if (dy<0) dy=-dy;
+			}
+		}
+		printmemory();
+		 
+	 }
+}
+ 
+ void checkcollision_ballpaddle()
+ {
+	 int pl=0;
+	 int pr=0;
+	 int pt=0;
+	 int pb=0;
+	 int bl=0;
+	 int br=0;
+	 int bt=0;
+	 int bb=0;
+	 if (triggerbigpaddle==0){
+		pl=paddlex;
+		pr=paddlex+128;
+		pt=paddley;
+		pb=paddley+32;
+	 }
+	 else if (triggerbigpaddle==1){
+		pl=paddlex;
+		pr=paddlex+192;
+		pt=paddley;
+		pb=paddley+32;
+
+	 }
+	 bl=ballx;
+	 br=ballx+32;
+	 bt=bally;
+	 bb=bally+32;
+	 int checkpaddletouch=Touching(pl,pr,pt,pb,bl,br,bt,bb);
+	 if (checkpaddletouch==1){
+		dy=-dy;
+		if (ballx<paddlex) {
+			if (dx>0) dx=-dx;
+		}
+		else{
+			if (dx<0) dx=-dx;
+		}
+
+	 }
+	 
+	
+	/*
 		
 		
 		// $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$   CASE for checking collision with brick $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -502,8 +527,159 @@ int convert_ycorner(int y){
 			}
 			
 		}
-	
+		*/
+ }
+ void checkbordercollision(){
+		int next_xtl;
+		int next_ytl;
+		
+		int next_xbl;
+		int next_ybl;
+		
+		int next_xtr;
+		int next_ytr;
 
+		int next_xbr;
+		int next_ybr;
+		
+		int ox=convert_x(ballx);
+		int oy=convert_y(bally);
+		
+		int next_xl;
+		int next_yl;
+		
+		int next_xr;
+		int next_yr;
+		
+		int next_xt;
+		int next_yt;
+		
+		int next_xb;
+		int next_yb;
+
+
+		next_xtl=ballx+dx;
+		next_ytl=bally+dy;
+
+		
+		next_xbl=ballx+dx;
+		next_ybl=bally+width_ball+dy;
+		
+		next_xtr=ballx+width_ball+dx;
+		next_ytr=bally+dy;
+		
+
+		next_xbr=ballx+width_ball+dx;
+		next_ybr=bally+height_ball+dy;
+		
+		int a=next_xtl; // real x coordinate
+		int b=next_ytl;  // real y coordinate
+		
+		
+
+		next_xtl=convert_x(next_xtl);
+		next_ytl=convert_y(next_ytl);
+//		printf("real tlx=%d realt tly=%d next tlx=%d next tly=%d \n",a,b,next_xtl,next_ytl);
+
+		next_xtr=convert_x(next_xtr);
+		next_ytr=convert_y(next_ytr);
+
+		next_xbl=convert_x(next_xbl);
+		next_ybl=convert_y(next_ybl);
+
+		next_xbr=convert_x(next_xbr);
+		next_ybr=convert_y(next_ybr);
+		
+		
+
+//	printf("real tlx=%d realt tly=%d next blx=%d next bly=%d \n",a,b,next_xbl,next_ybl);
+
+	//	printf("ballx=%d bally=%d dx=%d dy=%d tl=%d tr=%d bl=%d br=%d\n",ballx,bally,dx,dy,gamearray[next_ytl][next_xtl],gamearray[next_ytr][next_xtr],gamearray[next_ybl][next_xbl],gamearray[next_ybr][next_xbr]);
+		//printmemory();
+		
+		if (b >originy+height_bggame-30){
+
+				gamestate=1;
+				printf("STOP\n");
+				drawgameover(originx+width_bg/2-width_gameover/2,originy+height_bg/2-height_gameover/2,width_gameover,height_gameover);
+		}
+		
+		
+		
+		// CASE for change x direction -----------------------------------------------------------------------------------------
+		if ((next_xtl<=0) && (a <originx)) {
+//			printf("real tlx=%d realt tly=%d next tlx=%d next tly=%d \n",a,b,next_xtl,next_ytl);
+			
+			dx=-dx;
+		}
+		else if ((next_xtr>29) || (next_xbr >29)) {
+			dx=-dx;
+		}
+	
+		
+		// CASE for change y direction ------------------------------------------------------------------------------------------
+				// Touch the top of the game
+		if((gamearray[next_ytl][next_xtl]==9) && (next_ytl==0)){
+			dy=-dy;
+		}
+		else if((gamearray[next_ytr][next_xtr]==9) && (next_ytr==0)){
+			dy=-dy;
+		}
+		
+		// Case for change y speed for 45 degree and 60 degree -------------------------------------------------------------------
+		
+		
+		// at the edge of the paddle
+		if ((gamearray[next_ybl][next_xbl]==10))
+			{
+				//printf("In edge\n");
+				dy=-ang_valu;
+				
+			}
+			// at middle of the paddle
+		if (gamearray[next_ybl][next_xbl]==11){
+				//printf("In middle\n");
+				if (startthisgame==0) {
+					dy=-ang_valu;
+					startthisgame=1;
+				}
+				else if (startthisgame==1) dy=-2*ang_valu;
+
+		}
+ }
+ 
+ 
+ // Draw the ball movement
+ void moveball(int startx, int starty){
+		checkvaluepack();
+
+		clearball(prevballx,prevbally,width_ball,height_ball);
+		drawball(ballx,bally,width_ball,height_ball);
+
+		//printf("Speed value=%d\n",ang_valu);
+		
+	
+		checkcollision_ballpaddle();
+		//printmemory();
+		//printf("sTART check");
+		
+		// iterate through all bricks
+		
+		for (int i=1;i<4; i++){  // i for y axis
+		  for (int j=0; j<30;j=j+3) // j for x axis
+		  {
+			if((gamearray[i][j]>=6) &&(gamearray[i][j]<=8)){
+				
+				int checkedvalue=checkbrick(gamearray[i][j]);
+					//printf("y_i=%d x_j=%d value=%d\n",i,j,gamearray[i][j]);
+				checkcollision_ballbrick(i,j,checkedvalue);
+			}
+		  }
+		}
+		
+		checkbordercollision();
+	
+		
 		
 		delay(5);
 		prevballx = ballx;

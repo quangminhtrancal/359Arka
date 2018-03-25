@@ -95,7 +95,7 @@ void drawball(int x, int y, int lx, int ly){
 	// assign memory value
 	int indexx=convert_x(x);
 	int indexy=convert_y(y);
-	gamearray[indexy][indexx]=2;
+	//gamearray[indexy][indexx]=2;
 	
 }
 
@@ -115,7 +115,7 @@ void clearball(int x, int y, int lx, int ly){
 		// assign memory value
 	int indexx=convert_x(x);
 	int indexy=convert_y(y);
-	gamearray[indexy][indexx]=0;
+	//gamearray[indexy][indexx]=0;
 	
 }
 
