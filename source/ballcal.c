@@ -49,6 +49,7 @@ int triggerslowball;
 int triggerbigpaddle;
 int scores=0;
 int lives=3;
+int startball;
 
 int sbx; // check x position of slow ball symbol
 int sby;	// check y position of slow ball symbol
@@ -186,7 +187,7 @@ int Touching(int al, int ar, int at, int ab, int bl, int br, int bt, int bb)
 	
 	if ((ar >= bl)&&(al <= br)&&(ab>=bt)&&(at<=bb)){
 		printf("\n");
-		printf("al=%d ar=%d at=%d ab=%d bl=%d br=%d bt=%d bb=%d\n",al,ar,at,ab,bl,br,bt,bb);
+		printf("al=%d ar=%d at=%d ab=%d bl=%d br=%d bt=%d bb=%d dx=%d dy=%d\n",al,ar,at,ab,bl,br,bt,bb,dx,dy);
 		printf("\n");
 		check=1;
 	}
@@ -302,14 +303,14 @@ int Touching(int al, int ar, int at, int ab, int bl, int br, int bt, int bb)
 	 if (checkpaddletouch==1){
 		dy=-dy;
 		//dx=-dx;
-/*
+
 		if ((ballx+16)<(paddlex+midseg)) {
 			if (dx>0) dx=-dx;
 		}
 		else{
 			if (dx<0) dx=-dx;
 		}
-		*/
+		
 		if ((bl<(pl+firstseg))||(bl>(pl+firstseg+midseg)))  // check if collision is at the edge 45
 		{
 				// at first get 45 degree
@@ -408,9 +409,27 @@ int Touching(int al, int ar, int at, int ab, int bl, int br, int bt, int bb)
 		
 		if (b >originy+height_bggame-30){
 
-				gamestate=1;
-				printf("STOP\n");
-				drawgameover(originx+width_bg/2-width_gameover/2,originy+height_bg/2-height_gameover/2,width_gameover,height_gameover);
+				
+
+				if (lives>0) {
+					lives--;
+					clearpaddle(paddlex,paddley,width_paddle,height_paddle);
+					clearball(ballx,bally,width_ball,height_ball);
+					paddlex=originx+width_bggame/2-width_paddle/2;
+					paddley=originy+height_bggame-paddlegap;
+					ballx=originx+width_bggame/2-width_ball/2;
+					bally=paddley-34;
+					drawpaddle(paddlex,paddley,width_paddle,height_paddle);						//draw paddle @ start position
+					drawball(ballx,bally,width_ball,height_ball);
+					dx=ang_valu;
+					dy=-ang_valu;
+					startball=0;
+				}
+				if (lives==0){
+					printf("STOP\n");
+					drawgameover(originx+width_bg/2-width_gameover/2,originy+height_bg/2-height_gameover/2,width_gameover,height_gameover);
+					gamestate=1;
+				}
 		}
 		
 		
@@ -441,7 +460,7 @@ int Touching(int al, int ar, int at, int ab, int bl, int br, int bt, int bb)
  // Draw the ball movement
  void moveball(int startx, int starty){
 		updatescores();
-		printf("Score %d\n",scores);
+		printf("Score %d Lives=%d\n",scores,lives);
 		checkvaluepack();
 
 		clearball(prevballx,prevbally,width_ball,height_ball);
