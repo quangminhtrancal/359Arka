@@ -34,8 +34,8 @@ int prevbally;
 int ballx;
 int bally;
 int stop=0;
-int dx;
-int dy;
+int dx=2;
+int dy=2;
 int ang_valu=2;
 int miny[10];
 int gamestate;
@@ -85,6 +85,10 @@ void printmemory();
 int convert_x(int x);
 int convert_y(int y);
 void checkvaluepack();
+int receiveslowball;
+int receivebpaddle;
+void drawbigpaddle(int x, int y, int lx, int ly);
+void clearbigpaddle(int x, int y, int lx, int ly);
 
 
   void initialize_gamearray(){
@@ -413,17 +417,33 @@ int Touching(int al, int ar, int at, int ab, int bl, int br, int bt, int bb)
 
 				if (lives>0) {
 					lives--;
-					clearpaddle(paddlex,paddley,width_paddle,height_paddle);
-					clearball(ballx,bally,width_ball,height_ball);
-					paddlex=originx+width_bggame/2-width_paddle/2;
-					paddley=originy+height_bggame-paddlegap;
-					ballx=originx+width_bggame/2-width_ball/2;
-					bally=paddley-34;
-					drawpaddle(paddlex,paddley,width_paddle,height_paddle);						//draw paddle @ start position
-					drawball(ballx,bally,width_ball,height_ball);
+					if (receivebpaddle==0){
+						clearpaddle(paddlex,paddley,width_paddle,height_paddle);
+						clearball(ballx,bally,width_ball,height_ball);
+						paddlex=originx+width_bggame/2-width_paddle/2;
+						paddley=originy+height_bggame-paddlegap;
+						ballx=originx+width_bggame/2-width_ball/2;
+						bally=paddley-34;
+						drawpaddle(paddlex,paddley,width_paddle,height_paddle);						//draw paddle @ start position
+						drawball(ballx,bally,width_ball,height_ball);
+					
+					}
+					if (receivebpaddle==1){
+						clearbigpaddle(paddlex,paddley,width_paddle,height_paddle);
+						clearball(ballx,bally,width_ball,height_ball);
+						paddlex=originx+width_bggame/2-192/2;
+						paddley=originy+height_bggame-paddlegap;
+						ballx=originx+width_bggame/2-width_ball/2;
+						bally=paddley-34;
+						drawbigpaddle(paddlex,paddley,192,height_paddle);						//draw paddle @ start position
+						drawball(ballx,bally,width_ball,height_ball);
+					
+					}
+
+					
 					dx=ang_valu;
 					dy=-ang_valu;
-					startball=0;
+					//startball=0;
 				}
 				if (lives==0){
 					printf("STOP\n");
@@ -585,13 +605,35 @@ void drawnum(int num,int x, int y){
 	drawnum(num0,originx+416,originy);
 	
  }
+ void drawscorelabel(int x,int y){
+	int offset_color=0;
+	int color=0;
+	for (int i=0;i<32;i++){
+		for (int j=0; j<96; j++){
+			color=return_score(offset_color);
+			DrawPixel(x+j,y+i,color);
+			offset_color+=4;
+		}
+	}
+ }
+ void drawlivelabel(int x,int y){
+	 int offset_color=0;
+	int color=0;
+	for (int i=0;i<32;i++){
+		for (int j=0; j<96; j++){
+			color=return_live(offset_color);
+			DrawPixel(x+j,y+i,color);
+			offset_color+=4;
+		}
+	}
+ }
 
  // Draw the ball movement
  void moveball(int startx, int starty){
 		updatescores();
 		drawscore();
 		
-		drawnum(lives,576,originy);
+		drawnum(lives,700,originy);
 		printf("Score %d Lives=%d\n",scores,lives);
 		checkvaluepack();
 

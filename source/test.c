@@ -28,6 +28,11 @@ int return_startgame2(int offset_color);
  void drawstart(int x, int y, int lx, int ly) ;
  void drawstart2(int x, int y, int lx, int ly)  ;
  void initialize_gamearray();
+ void drawscorelabel();
+ void drawlivelabel();
+int receivebpaddle;
+void drawbigpaddle(int x, int y, int lx, int ly);
+void clearbigpaddle(int x, int y, int lx, int ly);
 
 
 //int originx=500;
@@ -424,27 +429,58 @@ void drabdH(int startx, int starty, int lx, int ly){
 }
 
 void leftmove(int speed){
-	clearpaddle(paddlex,paddley,width_paddle,height_paddle);
-	if (paddlex>originx) {
-		if (speed==0) 	paddlex-=1;
-		if (speed==1)	paddlex-=5;
-		if (speed==2)	paddlex-=10;
-		if (speed==3)	paddlex-=20;
+	if(receivebpaddle==0){
+		clearpaddle(paddlex,paddley,width_paddle,height_paddle);
+		if (paddlex>originx) {
+			if (speed==0) 	paddlex-=1;
+			if (speed==1)	paddlex-=5;
+			if (speed==2)	paddlex-=10;
+			if (speed==3)	paddlex-=20;
+		}
+		if (paddlex<originx) paddlex=originx;
+		drawpaddle(paddlex,paddley,width_paddle,height_paddle);
 	}
-	if (paddlex<originx) paddlex=originx;
-	drawpaddle(paddlex,paddley,width_paddle,height_paddle);
+	else if(receivebpaddle==1){
+		clearbigpaddle(paddlex,paddley,192,height_paddle);
+		if (paddlex>originx) {
+			if (speed==0) 	paddlex-=1;
+			if (speed==1)	paddlex-=5;
+			if (speed==2)	paddlex-=10;
+			if (speed==3)	paddlex-=20;
+		}
+		if (paddlex<originx) paddlex=originx;
+		drawbigpaddle(paddlex,paddley,192,height_paddle);
+	}
+
+	
 }
 
 void rightmove(int speed){
-	clearpaddle(paddlex,paddley,width_paddle,height_paddle);
-	if (paddlex<(originx+width_bg-width_paddle)) {
-		if (speed==0) 	paddlex+=1;
-		if (speed==1)	paddlex+=5;
-		if (speed==2)	paddlex+=10;
-		if (speed==3)	paddlex+=20;	
+	if (receivebpaddle==0){
+			clearpaddle(paddlex,paddley,width_paddle,height_paddle);
+		if (paddlex<(originx+width_bg-width_paddle)) {
+			if (speed==0) 	paddlex+=1;
+			if (speed==1)	paddlex+=5;
+			if (speed==2)	paddlex+=10;
+			if (speed==3)	paddlex+=20;	
+		}
+		if (paddlex>(originx+width_bggame-width_paddle)) paddlex=originx+width_bggame-width_paddle;
+		drawpaddle(paddlex,paddley,width_paddle,height_paddle);
 	}
-	if (paddlex>(originx+width_bggame-width_paddle)) paddlex=originx+width_bggame-width_paddle;
-	drawpaddle(paddlex,paddley,width_paddle,height_paddle);
+	else if (receivebpaddle==1){
+			clearbigpaddle(paddlex,paddley,width_paddle,height_paddle);
+		if (paddlex<(originx+width_bg-192)) {
+			if (speed==0) 	paddlex+=1;
+			if (speed==1)	paddlex+=5;
+			if (speed==2)	paddlex+=10;
+			if (speed==3)	paddlex+=20;	
+		}
+		if (paddlex>(originx+width_bggame-192)) paddlex=originx+width_bggame-192;
+		drawbigpaddle(paddlex,paddley,width_paddle,height_paddle);
+	}
+
+	
+	
 }
 
 void drawedge1(int x, int y, int lx, int ly){
@@ -569,6 +605,9 @@ void draw(){
  	drawedge2(originx+width_bggame,originy-32,32,32);
  	drawedge3(originx-32,originy+height_bggame,32,32);
  	drawedge4(originx+width_bggame,originy+height_bggame,32,32);
+ 	
+ 	drawscorelabel(348,originy);
+	drawlivelabel(604,originy);
 	
 
 	int button=0xFFFF;
@@ -674,8 +713,8 @@ void draw(){
 	//B- 65534
 	//Select- 65531
 	// Start-65527
-	// up pad
-	// down pad
+	// up pad- 65519
+	// down pad - 65503
 	
 	
 }

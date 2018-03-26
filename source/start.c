@@ -5,17 +5,11 @@
 #include <fcntl.h>
 
 int return_gameinterface(int offset_color);
-/*int return_quitgame(int offset_color);
-int return_quitgame2(int offset_color);
-int return_startgame(int offset_color);
-int return_startgame2(int offset_color);
-*/
+int return_gameinterface2(int offset_color);
+int originx;
+int originy;
 
-
-
-
-
-void drawgameinterface(int x, int y, int lx, int ly) {
+void drawstart(int x, int y, int lx, int ly) {
 
 	int offset_color=0;
 	int color=0;
@@ -31,7 +25,7 @@ void drawgameinterface(int x, int y, int lx, int ly) {
 
 }
 
-void drawgameinterface2(int x, int y, int lx, int ly) {
+void drawquit(int x, int y, int lx, int ly) {
 
 	int offset_color=0;
 	int color=0;
@@ -47,85 +41,39 @@ void drawgameinterface2(int x, int y, int lx, int ly) {
 
 }
 
-/* void drawquit(int x, int y, int lx, int ly) {
-
-	int offset_color=0;
-	int color=0;
-
-	for (int i=0;i<ly;i++){
-		for (int j=0; j<lx; j++){
-			color=return_quitgame(offset_color);
-			DrawPixel(x+j,y+i,color);
-			offset_color+=4;
-		}
-	}
-
-
-}
-
- void drawquit2(int x, int y, int lx, int ly) {
-
-	int offset_color=0;
-	int color=0;
-
-	for (int i=0;i<ly;i++){
-		for (int j=0; j<lx; j++){
-			color=return_quitgame2(offset_color);
-			DrawPixel(x+j,y+i,color);
-			offset_color+=4;
-		}
-	}
-
-
-}
-
- void drawstart(int x, int y, int lx, int ly) {
-
-	int offset_color=0;
-	int color=0;
-
-	for (int i=0;i<ly;i++){
-		for (int j=0; j<lx; j++){
-			color=return_startgame(offset_color);
-			DrawPixel(x+j,y+i,color);
-			offset_color+=4;
-		}
-	}
-
-
-}
-
- void drawstart2(int x, int y, int lx, int ly) {
-
-	int offset_color=0;
-	int color=0;
-
-	for (int i=0;i<ly;i++){
-		for (int j=0; j<lx; j++){
-			color=return_startgame2(offset_color);
-			DrawPixel(x+j,y+i,color);
-			offset_color+=4;
-		}
-	}
-
-
-}
-
-*/
-
-
 
 void drawstartscreen(){
-	
-	
-	// Drawing a start screen 
-	
-	drawgameinterface(100,100, 960, 640);
-	//drawstart(500,300,320,160);
-	//drawstart2(700,300,320,160);
-	//drawquit(500,500,320,160);
-	//drawquit2(500,500,320,160);
-	delay(8000);
-	drawgameinterface2(100,100,960,640);
-	delay(8000);
+	int read;
+	int up=1;
+	int down=0;
+
+	// Drawing a restart screen
+	drawstart(originx,originy, 960,640);
+	int movetogame=0;
+	while (movetogame==0){
+		read=readSnes();
+		
+		// up button
+		if (read==65519){
+			drawstart(originx,originy, 960,640);
+			up=1;
+			down=0;
+		}
+		
+		// down button
+		if (read==65503){
+			drawquit(originx,originy, 960,640);
+			down=1;
+			up=0;
+		}
+		// if A button is pressed
+		if (read==65279){
+			if (up==1) draw();
+			else if (down==1) printf ("You quit\n");
+		}
+		 
+	}
+
+
 }
+

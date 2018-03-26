@@ -15,8 +15,8 @@ main:
 	
 
 
-	//bl begingame
-	bl draw
+	bl drawstartscreen
+	//bl draw
 
 	@ stop
 	haltLoop$:
