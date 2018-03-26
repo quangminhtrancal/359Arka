@@ -468,7 +468,7 @@ void rightmove(int speed){
 		drawpaddle(paddlex,paddley,width_paddle,height_paddle);
 	}
 	else if (receivebpaddle==1){
-			clearbigpaddle(paddlex,paddley,width_paddle,height_paddle);
+			clearbigpaddle(paddlex,paddley,192,height_paddle);
 		if (paddlex<(originx+width_bg-192)) {
 			if (speed==0) 	paddlex+=1;
 			if (speed==1)	paddlex+=5;
@@ -476,7 +476,7 @@ void rightmove(int speed){
 			if (speed==3)	paddlex+=20;	
 		}
 		if (paddlex>(originx+width_bggame-192)) paddlex=originx+width_bggame-192;
-		drawbigpaddle(paddlex,paddley,width_paddle,height_paddle);
+		drawbigpaddle(paddlex,paddley,192,height_paddle);
 	}
 
 	
@@ -698,6 +698,8 @@ void draw(){
 						speed=0;
 						previousbutton=65215;	
 					}
+					
+					// If start is pressed
 
 					delay(5);
 						

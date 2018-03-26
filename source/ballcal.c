@@ -429,12 +429,14 @@ int Touching(int al, int ar, int at, int ab, int bl, int br, int bt, int bb)
 					
 					}
 					if (receivebpaddle==1){
-						clearbigpaddle(paddlex,paddley,width_paddle,height_paddle);
+						clearbigpaddle(paddlex,paddley,192,height_paddle);
 						clearball(ballx,bally,width_ball,height_ball);
-						paddlex=originx+width_bggame/2-192/2;
-						paddley=originy+height_bggame-paddlegap;
+
 						ballx=originx+width_bggame/2-width_ball/2;
 						bally=paddley-34;
+						clearbigpaddle(paddlex,paddley,192,height_paddle);
+						paddlex=originx+width_bggame/2-192/2;
+						paddley=originy+height_bggame-paddlegap;
 						drawbigpaddle(paddlex,paddley,192,height_paddle);						//draw paddle @ start position
 						drawball(ballx,bally,width_ball,height_ball);
 					
