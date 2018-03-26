@@ -506,6 +506,8 @@ void drawedge1(int x, int y, int lx, int ly){
  }
  
 
+ 
+
 void initialize_ymin(){
 	for(int i=0; i<10; i++){
 		miny[i]=originy+brickgap+height_brick*3;
@@ -532,6 +534,9 @@ void printmemory(){
 }
 
 void draw(){
+	
+
+	
 	
 	
 	initialize_gamearray();
