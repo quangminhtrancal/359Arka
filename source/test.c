@@ -700,6 +700,9 @@ void draw(){
 					}
 					
 					// If start is pressed
+					else if (read==65527){
+						printf("Start is pressed\n");
+					}
 
 					delay(5);
 						

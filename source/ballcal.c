@@ -133,26 +133,26 @@ int reversey(int indexy){
 	return 0;
  }
  void updatescores(){
-	int count6=0; // count white bricks
-	int count7=0; // count green bricks
-	int count8=0; // count red bricks
+	int count=0; // count white bricks
+//	int count7=0; // count green bricks
+	//int count8=0; // count red bricks
 	
 	for (int j=0;j<30;j=j+3){
-		if (gamearray[3][j]==6){ count6+=1;
+		if (gamearray[3][j]==6){ count+=1;
 		}
-		if (gamearray[2][j]==7){ count7+=1;
+		if (gamearray[2][j]==7){ count+=1;
 		}
-		if (gamearray[1][j]==8){ count8+=1;
+		if (gamearray[1][j]==8){ count+=1;
 		}
-		int total=count6+2*count7+3*count8;
-		scores=60-total;
+		//int total=count6+2*count7+3*count8;
+		scores=30-count;
 		
 	}
 }
  void treatbrick(int nextx, int nexty, int category){
  	if (category==1) {
 		clearbrick(reversex(nextx),reversey(nexty),width_brick,height_brick);
-
+		scores++;
 		// Setting to define the column of white brick which has the trigger for the value pack
 		if (nextx/3==trigslow) {
 			triggerslowball=1;
@@ -632,11 +632,11 @@ void drawnum(int num,int x, int y){
 
  // Draw the ball movement
  void moveball(int startx, int starty){
-		updatescores();
+		//updatescores();
 		drawscore();
 		
 		drawnum(lives,700,originy);
-		printf("Score %d Lives=%d\n",scores,lives);
+		//printf("Score %d Lives=%d\n",scores,lives);
 		checkvaluepack();
 
 		clearball(prevballx,prevbally,width_ball,height_ball);
