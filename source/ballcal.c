@@ -48,6 +48,7 @@ int trigbig=7;
 int triggerslowball;
 int triggerbigpaddle;
 int scores=0;
+int lives=3;
 
 int sbx; // check x position of slow ball symbol
 int sby;	// check y position of slow ball symbol
@@ -218,8 +219,7 @@ int Touching(int al, int ar, int at, int ab, int bl, int br, int bt, int bb)
 	 if (checkbricktouch==1){
 		 
 		 printf("in treat brick brx=%d bry=%d value=%d\n",brx,bry,brvalue);
-		 updatescores();
-		 printf("Score %d\n",scores);
+
 		 treatbrick(brx,bry,brvalue);
 
 		 int leftarea=br-brl;
@@ -273,19 +273,27 @@ int Touching(int al, int ar, int at, int ab, int bl, int br, int bt, int bb)
 	 int br=0;
 	 int bt=0;
 	 int bb=0;
+	 int plength=0;
+	 int firstseg=0;
+	 int midseg=0;
 	 if (triggerbigpaddle==0){
-		pl=paddlex;
-		pr=paddlex+128;
-		pt=paddley;
-		pb=paddley+32;
+		 plength=128;
+		 firstseg=20;
+		 midseg=64;
 	 }
 	 else if (triggerbigpaddle==1){
-		pl=paddlex;
-		pr=paddlex+192;
+		 plength=192;
+		 firstseg=28;
+		 midseg=96;
+	 }
+	 
+ 		pl=paddlex;
+		pr=paddlex+plength;
 		pt=paddley;
 		pb=paddley+32;
 
-	 }
+	 
+	 
 	 bl=ballx;
 	 br=ballx+32;
 	 bt=bally;
@@ -293,241 +301,42 @@ int Touching(int al, int ar, int at, int ab, int bl, int br, int bt, int bb)
 	 int checkpaddletouch=Touching(pl,pr,pt,pb,bl,br,bt,bb);
 	 if (checkpaddletouch==1){
 		dy=-dy;
-		if (ballx<paddlex) {
+		//dx=-dx;
+/*
+		if ((ballx+16)<(paddlex+midseg)) {
 			if (dx>0) dx=-dx;
 		}
 		else{
 			if (dx<0) dx=-dx;
 		}
+		*/
+		if ((bl<(pl+firstseg))||(bl>(pl+firstseg+midseg)))  // check if collision is at the edge 45
+		{
+				// at first get 45 degree
+				if (startthisgame==0) {
+					if (dy>0) dy=ang_valu;
+					else dy=-ang_valu;
+					startthisgame=1;
+				}
+				// the next one get 60 degree
+				else if (startthisgame==1) {
+					if (dy>0) dy=ang_valu;
+					else dy=-ang_valu;
+
+				}
+		}
+		else if(((bl>(pl+firstseg))&&(bl<(pl+firstseg+midseg)))){  // check if collision is at the middle 60
+				if (dy>0) dy=2*ang_valu;
+				else dy=-2*ang_valu;
+				delay(10); // delay to slow down at 60 degre
+		}
+		
 
 	 }
 	 
+
+
 	
-	/*
-		
-		
-		// $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$   CASE for checking collision with brick $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-		
-		if ((dx<0) && (dy<0))  // Check three points tl, t, l  ->tl,tr,bl
-		{
-			int tl=gamearray[next_ytl][next_xtl];
-			int tr=gamearray[next_ytr][next_xtr];
-			int bl=gamearray[next_yl][next_xl];
-			int tlhas=0;
-			int trhas=0;
-			int blhas=0;
-			tlhas=checkbrick(tl); //0 if no brick; 1 if white brick; 2 if green bick and 3 if red brick
-			trhas=checkbrick(tr);
-			blhas=checkbrick(bl);
-				
-			
-			if ((tlhas==0)&&(trhas==0)&&(blhas>0)){ // 001 there is only brick on left
-				dx=-dx;
-				treatbrick(next_xbl,next_ybl,blhas);
-			}
-			
-			else if ((tlhas==0)&&(trhas>0)&&(blhas==0)){ // 010 there is only brick at top 
-				dy=-dy;
-				treatbrick(next_xtr,next_ytr,trhas);
-			}
-			else if ((tlhas==0)&&(trhas>0)&&(blhas>0)){ // 011 there are bricks at top and left
-				dy=-dy;
-				dx=-dx;
-				treatbrick(next_xtr,next_ytr,trhas);
-				treatbrick(next_xbl,next_ybl,blhas);
-			}
-			else if ((tlhas>0)&&(trhas==0)&&(blhas==0)){ // 100 there is only brick at the top left
-				dy=-dy;
-				treatbrick(next_xtl,next_ytl,tlhas);
-			}
-			else if ((tlhas>0)&&(trhas==0)&&(blhas>0)){ // 101 there are bricks on top left and left
-				dy=-dy;
-				dx=-dx;
-				treatbrick(next_xtl,next_ytl,tlhas);
-				treatbrick(next_xbl,next_ybl,blhas);
-			}
-			else if ((tlhas>0)&&(trhas>0)&&(blhas==0)){ // 110 there are bricks on top left and top right
-				dy=-dy;
-				treatbrick(next_xtl,next_ytl,tlhas);
-				treatbrick(next_xtr,next_ytr,trhas);
-			}
-
-			else if ((tlhas>0)&&(trhas>0)&&(blhas>0)){ // 111 there are bricks on top left and top and left
-				dy=-dy;
-				dx=-dx;
-				treatbrick(next_xtl,next_ytl,tlhas);
-				treatbrick(next_xtr,next_ytr,trhas);
-				treatbrick(next_xbl,next_ybl,blhas);
-			}
-		}
-		
-	
-		else if ((dx>0) && (dy<0)){  // Check three points -> t-tr-r  -> tl,tr,br
-
-			int tl=gamearray[next_ytl][next_xtl];
-			int tr=gamearray[next_ytr][next_xtr];
-			int br=gamearray[next_ybr][next_xbr];
-			int tlhas=0;
-			int trhas=0;
-			int brhas=0;
-			tlhas=checkbrick(tl); //0 if no brick; 1 if white brick; 2 if green bick and 3 if red brick
-			trhas=checkbrick(tr);
-			brhas=checkbrick(br);
-		//	printf("ballx=%d bally=%d dx=%d dy=%d tl=%d tr=%d bl=%d br=%d tlhas=%d trhas=%d brhas=%d\n",ballx,bally,dx,dy,gamearray[next_ytl][next_xtl],gamearray[next_ytr][next_xtr],gamearray[next_ybl][next_xbl],gamearray[next_ybr][next_xbr],tlhas,trhas,brhas);
-			
-			if ((tlhas==0)&&(trhas==0)&&(brhas>0)){ // 001 there is only brick on right
-				dx=-dx;
-				treatbrick(next_xbr,next_ybr,brhas);
-			}
-			
-			else if ((tlhas==0)&&(trhas>0)&&(brhas==0)){ // 010 there is only brick at top right
-				dy=-dy;
-				treatbrick(next_xtr,next_ytr,trhas);
-			}
-			else if ((tlhas==0)&&(trhas>0)&&(brhas>0)){ // 011 there are bricks at top right and bottom right
-				dy=-dy;
-				dx=-dx;
-				treatbrick(next_xtr,next_ytr,trhas);
-				treatbrick(next_xbr,next_ybr,brhas);
-			}
-			else if ((tlhas>0)&&(trhas==0)&&(brhas==0)){ // 100 there is only brick at the top left
-				dy=-dy;
-				treatbrick(next_xtl,next_ytl,tlhas);
-			}
-			else if ((tlhas>0)&&(trhas==0)&&(brhas>0)){ // 101 there are bricks on top left and bottom right
-				dy=-dy;
-				dx=-dx;
-				treatbrick(next_xtl,next_ytl,tlhas);
-				treatbrick(next_xbr,next_ybr,brhas);
-			}
-			else if ((tlhas>0)&&(trhas>0)&&(brhas==0)){ // 110 there are bricks on top left and top right
-
-				dy=-dy;
-				//printf("In here %d %d %d\n",tlhas,trhas,dy);
-				//dx=-dx;
-				treatbrick(next_xtl,next_ytl,tlhas);
-				treatbrick(next_xtr,next_ytr,trhas);
-			}
-
-			else if ((tlhas>0)&&(trhas>0)&&(brhas>0)){ // 111 there are bricks on top left and top right and bottom right
-				dy=-dy;
-				dx=-dx;
-				treatbrick(next_xtl,next_ytl,tlhas);
-				treatbrick(next_xtr,next_ytr,trhas);
-				treatbrick(next_xbr,next_ybr,brhas);
-			}	
-		}
-
-
-		else if ((dx<0) && (dy>0)){  // Check three points l,bl,b-> tl, bl, br 
-			int tl=gamearray[next_ytl][next_xtl];
-			int bl=gamearray[next_ybl][next_xbl];
-			int br=gamearray[next_ybr][next_xbr];
-			int tlhas=0;
-			int blhas=0;
-			int brhas=0;
-			tlhas=checkbrick(tl); //0 if no brick; 1 if white brick; 2 if green bick and 3 if red brick
-			blhas=checkbrick(bl);
-			brhas=checkbrick(br);
-			
-//			printf("dx<0 dy>0 tlh=%d blh=%d brh=%d\n",tlhas,blhas,brhas);
-			
-			if ((tlhas==0)&&(blhas==0)&&(brhas>0)){ // 001 there is only brick on right
-				dx=-dx;
-				treatbrick(next_xbr,next_ybr,brhas);
-			}
-			
-			else if ((tlhas==0)&&(blhas>0)&&(brhas==0)){ // 010 there is only brick at bottomleft
-				dy=-dy;
-				treatbrick(next_xbl,next_ybl,blhas);
-			}
-			else if ((tlhas==0)&&(blhas>0)&&(brhas>0)){ // 011 there are bricks at bottom left and bottom right
-				dy=-dy;
-				dx=-dx;
-				treatbrick(next_xbl,next_ybl,blhas);
-				treatbrick(next_xbr,next_ybr,brhas);
-			}
-			else if ((tlhas>0)&&(blhas==0)&&(brhas==0)){ // 100 there is only brick at the top left
-				dy=-dy;
-				treatbrick(next_xtl,next_ytl,tlhas);
-			}
-			else if ((tlhas>0)&&(blhas==0)&&(brhas>0)){ // 101 there are bricks on top left and bottom right
-				dy=-dy;
-				dx=-dx;
-				treatbrick(next_xtl,next_ytl,tlhas);
-				treatbrick(next_xbr,next_ybr,brhas);
-			}
-			else if ((tlhas>0)&&(blhas>0)&&(brhas==0)){ // 110 there are bricks on top left and top right
-				dy=-dy;
-				dx=-dx;
-				treatbrick(next_xtl,next_ytl,tlhas);
-				treatbrick(next_xbl,next_ybl,blhas);
-			}
-
-			else if ((tlhas>0)&&(blhas>0)&&(brhas>0)){ // 111 there are bricks on top left and top right and bottom left
-				dy=-dy;
-				dx=-dx;
-				treatbrick(next_xtl,next_ytl,tlhas);
-				treatbrick(next_xbl,next_ybl,blhas);
-				treatbrick(next_xbr,next_ybr,brhas);
-			}	
-		}
-		
-		else if ((dx>0) && (dy>0)){  // Check three points r, b,br ->tr, bl, br  
-			int tr=gamearray[next_ytr][next_xtr];
-			int bl=gamearray[next_ybl][next_xbl];
-			int br=gamearray[next_ybr][next_xbr];
-			int trhas=0;
-			int blhas=0;
-			int brhas=0;
-			trhas=checkbrick(tr); //0 if no brick; 1 if white brick; 2 if green bick and 3 if red brick
-			blhas=checkbrick(bl);
-			brhas=checkbrick(br);
-			
-//			printf("dx>0 dy>0 trh=%d blh=%d brh=%d\n",trhas,blhas,brhas);
-			
-			if ((trhas==0)&&(blhas==0)&&(brhas>0)){ // 001 there is only brick on right
-				dx=-dx;
-				treatbrick(next_xbr,next_ybr,brhas);
-			}
-			
-			else if ((trhas==0)&&(blhas>0)&&(brhas==0)){ // 010 there is only brick at bottomleft
-				dy=-dy;
-				treatbrick(next_xbl,next_ybl,blhas);
-			}
-			else if ((trhas==0)&&(blhas>0)&&(brhas>0)){ // 011 there are bricks at bottom left and bottom right
-				dy=-dy;
-				dx=-dx;
-				treatbrick(next_xbl,next_ybl,blhas);
-				treatbrick(next_xbr,next_ybr,brhas);
-			}
-			else if ((trhas>0)&&(blhas==0)&&(brhas==0)){ // 100 there is only brick at the top right
-				dy=-dy;
-				treatbrick(next_xtr,next_ytr,trhas);
-			}
-			else if ((trhas>0)&&(blhas==0)&&(brhas>0)){ // 101 there are bricks on top right and bottom right
-				dy=-dy;
-				dx=-dx;
-				treatbrick(next_xtr,next_ytr,trhas);
-				treatbrick(next_xbr,next_ybr,brhas);
-			}
-			else if ((trhas>0)&&(blhas>0)&&(brhas==0)){ // 110 there are bricks on top right and bottom left
-				dy=-dy;
-				dx=-dx;
-				treatbrick(next_xtr,next_ytr,trhas);
-				treatbrick(next_xbl,next_ybl,blhas);
-			}
-
-			else if ((trhas>0)&&(blhas>0)&&(brhas>0)){ // 111 there are bricks on top left and top right and bottom left
-				dy=-dy;
-				dx=-dx;
-				treatbrick(next_xtr,next_ytr,trhas);
-				treatbrick(next_xbl,next_ybl,blhas);
-				treatbrick(next_xbr,next_ybr,brhas);
-			}
-			
-		}
-		*/
  }
  void checkbordercollision(){
 		int next_xtl;
@@ -626,31 +435,13 @@ int Touching(int al, int ar, int at, int ab, int bl, int br, int bt, int bb)
 			dy=-dy;
 		}
 		
-		// Case for change y speed for 45 degree and 60 degree -------------------------------------------------------------------
-		
-		
-		// at the edge of the paddle
-		if ((gamearray[next_ybl][next_xbl]==10))
-			{
-				//printf("In edge\n");
-				dy=-ang_valu;
-				
-			}
-			// at middle of the paddle
-		if (gamearray[next_ybl][next_xbl]==11){
-				//printf("In middle\n");
-				if (startthisgame==0) {
-					dy=-ang_valu;
-					startthisgame=1;
-				}
-				else if (startthisgame==1) dy=-2*ang_valu;
-
-		}
  }
  
  
  // Draw the ball movement
  void moveball(int startx, int starty){
+		updatescores();
+		printf("Score %d\n",scores);
 		checkvaluepack();
 
 		clearball(prevballx,prevbally,width_ball,height_ball);
