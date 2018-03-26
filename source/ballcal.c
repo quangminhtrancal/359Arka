@@ -427,6 +427,7 @@ int Touching(int al, int ar, int at, int ab, int bl, int br, int bt, int bb)
 				}
 				if (lives==0){
 					printf("STOP\n");
+					drawnum(lives,576,originy);
 					drawgameover(originx+width_bg/2-width_gameover/2,originy+height_bg/2-height_gameover/2,width_gameover,height_gameover);
 					gamestate=1;
 				}
@@ -455,11 +456,142 @@ int Touching(int al, int ar, int at, int ab, int bl, int br, int bt, int bb)
 		}
 		
  }
- 
- 
+ void draw0(int x,int y){
+	int offset_color=0;
+	int color=0;
+	for (int i=0;i<32;i++){
+		for (int j=0; j<32; j++){
+			color=return_zero(offset_color);
+			DrawPixel(x+j,y+i,color);
+			offset_color+=4;
+		}
+	}
+ }
+void draw1(int x,int y){
+	int offset_color=0;
+	int color=0;
+	for (int i=0;i<32;i++){
+		for (int j=0; j<32; j++){
+			color=return_one(offset_color);
+			DrawPixel(x+j,y+i,color);
+			offset_color+=4;
+		}
+	}
+}
+void draw2(int x,int y){
+	int offset_color=0;
+	int color=0;
+	for (int i=0;i<32;i++){
+		for (int j=0; j<32; j++){
+			color=return_two(offset_color);
+			DrawPixel(x+j,y+i,color);
+			offset_color+=4;
+		}
+	}
+ }
+ void draw3(int x,int y){
+	int offset_color=0;
+	int color=0;
+	for (int i=0;i<32;i++){
+		for (int j=0; j<32; j++){
+			color=return_three(offset_color);
+			DrawPixel(x+j,y+i,color);
+			offset_color+=4;
+		}
+	}
+ }
+  void draw4(int x,int y){
+	int offset_color=0;
+	int color=0;
+	for (int i=0;i<32;i++){
+		for (int j=0; j<32; j++){
+			color=return_four(offset_color);
+			DrawPixel(x+j,y+i,color);
+			offset_color+=4;
+		}
+	}
+ }
+  void draw5(int x,int y){
+	int offset_color=0;
+	int color=0;
+	for (int i=0;i<32;i++){
+		for (int j=0; j<32; j++){
+			color=return_five(offset_color);
+			DrawPixel(x+j,y+i,color);
+			offset_color+=4;
+		}
+	}
+ }
+ void draw6(int x,int y){
+	int offset_color=0;
+	int color=0;
+	for (int i=0;i<32;i++){
+		for (int j=0; j<32; j++){
+			color=return_six(offset_color);
+			DrawPixel(x+j,y+i,color);
+			offset_color+=4;
+		}
+	}
+ }
+ void draw7(int x,int y){
+	int offset_color=0;
+	int color=0;
+	for (int i=0;i<32;i++){
+		for (int j=0; j<32; j++){
+			color=return_seven(offset_color);
+			DrawPixel(x+j,y+i,color);
+			offset_color+=4;
+		}
+	}
+ }
+void draw8(int x,int y){
+	int offset_color=0;
+	int color=0;
+	for (int i=0;i<32;i++){
+		for (int j=0; j<32; j++){
+			color=return_eight(offset_color);
+			DrawPixel(x+j,y+i,color);
+			offset_color+=4;
+		}
+	}
+ }
+  void draw9(int x,int y){
+	int offset_color=0;
+	int color=0;
+	for (int i=0;i<32;i++){
+		for (int j=0; j<32; j++){
+			color=return_nine(offset_color);
+			DrawPixel(x+j,y+i,color);
+			offset_color+=4;
+		}
+	}
+ }
+void drawnum(int num,int x, int y){
+	if (num==0) draw0(x,y);
+	if (num==1) draw1(x,y);
+	if (num==2) draw2(x,y);
+	if (num==3) draw3(x,y);
+	if (num==4) draw4(x,y);
+	if (num==5) draw5(x,y);
+	if (num==6) draw6(x,y);
+	if (num==7) draw7(x,y);
+	if (num==8) draw8(x,y);
+	if (num==9) draw9(x,y);
+}
+ void drawscore(){
+	int num0=scores % 10;
+	int num1=scores/10;
+	drawnum(num1,originx+384,originy);
+	drawnum(num0,originx+416,originy);
+	
+ }
+
  // Draw the ball movement
  void moveball(int startx, int starty){
 		updatescores();
+		drawscore();
+		
+		drawnum(lives,576,originy);
 		printf("Score %d Lives=%d\n",scores,lives);
 		checkvaluepack();
 

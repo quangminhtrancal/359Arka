@@ -9,6 +9,9 @@ main:
 	bl		initFbInfo
 
 	bl		initSnes
+	mov r0,#10
+	mov	r1,#10
+	//bl		DrawCharB
 	
 
 
